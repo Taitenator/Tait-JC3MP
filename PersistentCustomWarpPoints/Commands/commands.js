@@ -28,7 +28,7 @@ module.exports = ({ Command, manager }) => {
       .description('creates a permanent warp point that allows other people to teleport there.')
       .parameter('name', 'string', 'warp name', { isTextParameter: true })
       .handler((player, name) => {
-          if (!customWarp.utils.isAdmin(player)) {
+          if (customWarp.config.admins.indexOf(player.client.steamId) == -1) {
               customWarp.chat.send(player, 'you are not allowed to use this command', customWarp.config.colours.red)
               return;
           }
@@ -47,6 +47,26 @@ module.exports = ({ Command, manager }) => {
           saveMarkers(markers);
       }))
 
+
+    .add(new Command('delwarp')
+      .description('deletes the specified warp point.')
+      .parameter('name', 'string', 'warp name', { isTextParameter: true })
+      .handler((player, name) => {
+          if (customWarp.config.admins.indexOf(player.client.steamId) == -1) {
+              customWarp.chat.send(player, 'you are not allowed to use this command', customWarp.config.colours.red)
+              return;
+          }
+          if (!markers.has(name)) {
+              customWarp.chat.send(player, 'There is no warp point with that name.', customWarp.config.colours.red);
+              return;
+          }
+
+          markers.get(name).Destroy();
+          markers.delete(name);
+          saveMarkers(markers);
+          customWarp.chat.broadcast(`${player.escapedNametagName} deleted Server Warp Point '${name}'.`, customWarp.config.colours.orange);
+  }))
+ 
     .add(new Command(['warp', 'wp'])
       .parameter('name', 'string', 'warps to a waypoint')
       .description('teleports you to a map marker', { isTextParameter: true })
