@@ -28,6 +28,10 @@ module.exports = ({ Command, manager }) => {
       .description('creates a permanent warp point that allows other people to teleport there.')
       .parameter('name', 'string', 'warp name', { isTextParameter: true })
       .handler((player, name) => {
+          if (!customWarp.utils.isAdmin(player)) {
+              customWarp.chat.send(player, 'you are not allowed to use this command', customWarp.config.colours.red)
+              return;
+          }
           if (markers.has(name)) {
               customWarp.chat.send(player, 'A Warp Point with that name already exists.', customWarp.config.colours.red);
               return;
