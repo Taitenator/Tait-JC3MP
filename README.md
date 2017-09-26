@@ -1,2 +1,2 @@
 # Tait-JC3MP
-Stuff tait makes for JC3MP
+Plugins for JC3MP made by James Tait.
